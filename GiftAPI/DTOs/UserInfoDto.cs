@@ -15,12 +15,10 @@ namespace GiftAPI.DTOs
         public int? FavoriteGiftId { get; set; }
 
 
-        //user can have multiple favourited gitfs:
-        public ICollection<GiftInfoDto> FavoriteGifts { get; set; } = new List<GiftInfoDto>();
-
       
-      //  public GiftInfoDto FavoriteGift { get; set; }
-       // public ICollection<GiftInfoDto> FavoriteGifts { get; set; }
+
+        //  public GiftInfoDto FavoriteGift { get; set; }
+        // public ICollection<GiftInfoDto> FavoriteGifts { get; set; }
 
     }
 }

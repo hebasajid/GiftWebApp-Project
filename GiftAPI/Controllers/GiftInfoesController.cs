@@ -26,12 +26,21 @@ namespace GiftAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GiftInfoDto>>> GetGifts()
+        public async Task<ActionResult<IEnumerable<GiftInfo>>> GetAllGiftsAsync()
         {
-            var gifts = await _giftInfoRepository.GetGiftInfoesAsync();
-            var giftDtos = _mapper.Map<IEnumerable<GiftInfoDto>>(gifts);
-            return Ok(giftDtos);
+            try
+            {
+                var gifts = await _giftInfoRepository.GetAllGiftsAsync();
+                var giftDtos = _mapper.Map<IEnumerable<GiftInfo>, IEnumerable<GiftInfoDto>>(gifts);
+                return Ok(giftDtos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
+
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GiftInfoDto>> GetGiftById(int id)

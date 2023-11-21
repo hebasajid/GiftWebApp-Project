@@ -23,7 +23,7 @@ namespace GiftAPI.DTOs
       
 
         //user can have many gifts favourited:
-        public  ICollection<UserInfoDto> UserInfos { get; set; } = new List<UserInfoDto>();
+      //  public  ICollection<UserInfoDto> UserInfos { get; set; } = new List<UserInfoDto>();
 
       //  public int? FavoriteUserId { get; set; }
       //  public UserInfoDto FavoriteUser { get; set; }

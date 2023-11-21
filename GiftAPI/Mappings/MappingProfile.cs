@@ -15,10 +15,14 @@ namespace GiftAPI.Mappings
             //mapping from UserInfo to its DTO
             CreateMap<UserInfo, UserInfoDto>(); 
 
+            CreateMap<UserFavoriteGift, UserFavoriteGiftDto>();
+
             // reverse mappings:
             CreateMap<GiftInfoDto, GiftInfo>(); 
 
             CreateMap<UserInfoDto, UserInfo>();
+
+            CreateMap<UserFavoriteGiftDto, UserFavoriteGift>();
 
 
 
