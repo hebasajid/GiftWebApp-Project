@@ -109,7 +109,8 @@ namespace GiftAPI.Controllers
             }
 
             var giftInfoDto = _mapper.Map<GiftInfoDto>(giftInfo);
-            patchDoc.ApplyTo(giftInfoDto, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter)ModelState);
+            patchDoc.ApplyTo(giftInfoDto);
+
 
             if (!TryValidateModel(giftInfoDto))
             {

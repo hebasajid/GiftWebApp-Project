@@ -17,6 +17,7 @@ namespace GiftAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers().AddNewtonsoftJson();
 
             builder.Services.AddDbContext<GiftInfoDbContext>(options =>
                options.UseSqlServer(builder.Configuration.GetConnectionString("Connection2GiftInfoDB")));
