@@ -1,4 +1,4 @@
-﻿using GiftInfoLibrary.Models;
+﻿using GiftInfoLibraryy.Models;
 
 namespace GiftAPI.DTOs
 {

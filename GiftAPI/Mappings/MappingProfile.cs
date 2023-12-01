@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using GiftAPI.DTOs;
-using GiftInfoLibrary.Models;
+using GiftInfoLibraryy.Models;
 
 namespace GiftAPI.Mappings
 {
@@ -13,14 +13,14 @@ namespace GiftAPI.Mappings
             CreateMap<GiftInfo, GiftInfoDto>(); 
 
             //mapping from UserInfo to its DTO
-            CreateMap<ParentGifts, ParentGiftsDto>(); 
+            CreateMap<ParentGift, ParentGiftsDto>(); 
 
             CreateMap<UserFavoriteGift, UserFavoriteGiftDto>();
 
             // reverse mappings:
             CreateMap<GiftInfoDto, GiftInfo>(); 
 
-            CreateMap<ParentGiftsDto, ParentGifts>();
+            CreateMap<ParentGiftsDto, ParentGift>();
 
             CreateMap<UserFavoriteGiftDto, UserFavoriteGift>();
 

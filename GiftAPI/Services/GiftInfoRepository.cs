@@ -1,5 +1,5 @@
 ﻿using GiftAPI.Services;
-using GiftInfoLibrary.Models;
+using GiftInfoLibraryy.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GiftInfoAPI.Services
@@ -67,7 +67,7 @@ namespace GiftInfoAPI.Services
         public async Task<bool> AddToParentFavoriteAsync(int pGiftId, int giftId)
         {
             // checking if the user and gift exist in the database
-            var user = await _context.ParentGiftss.FindAsync(pGiftId);
+            var user = await _context.ParentGifts.FindAsync(pGiftId);
             var gift = await _context.GiftInfos.FindAsync(giftId);
 
             if (user != null && gift != null)
@@ -105,7 +105,7 @@ namespace GiftInfoAPI.Services
         public async Task<bool> DeleteFromParentFavoriteAsync(int pGiftId, int giftId)
         {
             // Check if the user and gift exist in the database
-            var user = await _context.ParentGiftss.FindAsync(pGiftId);
+            var user = await _context.ParentGifts.FindAsync(pGiftId);
             var gift = await _context.GiftInfos.FindAsync(giftId);
 
             if (user != null && gift != null)
@@ -135,7 +135,7 @@ namespace GiftInfoAPI.Services
         public async Task<bool> UpdateParentFavoriteAsync(int pGiftId, List<int> updatedGiftIds)
         {
             // Check if the user exists in the database
-            var user = await _context.ParentGiftss.FindAsync(pGiftId);
+            var user = await _context.ParentGifts.FindAsync(pGiftId);
 
             if (user != null)
             {

@@ -8,7 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["GiftAPI/GiftAPI.csproj", "GiftAPI/"]
-COPY ["GiftInfoLibrary/GiftInfoLibrary.csproj", "GiftInfoLibrary/"]
+COPY ["GiftInfoLibraryy/GiftInfoLibraryy.csproj", "GiftInfoLibraryy/"]
 RUN dotnet restore "GiftAPI/GiftAPI.csproj"
 COPY . .
 WORKDIR "/src/GiftAPI"

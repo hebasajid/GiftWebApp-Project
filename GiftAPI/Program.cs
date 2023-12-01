@@ -1,6 +1,6 @@
 using GiftAPI.Services;
 using GiftInfoAPI.Services;
-using GiftInfoLibrary.Models;
+using GiftInfoLibraryy.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GiftAPI

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GiftInfoLibrary.Models;
+using GiftInfoLibraryy.Models;
 using AutoMapper;
 using GiftAPI.Services;
 using GiftAPI.DTOs;
