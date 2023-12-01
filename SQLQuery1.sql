@@ -1,5 +1,4 @@
-﻿CREATE DATABASE GiftInfoDB;
-GO
+﻿Create database GiftInfoDB;
 
 USE GiftInfoDB;
 GO
@@ -141,20 +140,31 @@ VALUES (
 );
 GO
 
-CREATE TABLE dbo.UserInfo (
-    UserId      INT  IDENTITY (1, 1) PRIMARY KEY,
-    UserName    NVARCHAR(100)  NOT NULL,
-    Email       NVARCHAR(100)  NOT NULL,
-    UserPass  NVARCHAR(100) NOT NULL
-   
+CREATE TABLE dbo.ParentGifts (
+    PGiftId      INT  IDENTITY (1, 1) PRIMARY KEY,
+    GiftName NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(500) NOT NULL,
+    GiftPrice DECIMAL(10, 2) NOT NULL,
+	GiftCategory NVARCHAR(100) 
 );
 GO
 
+INSERT INTO dbo.ParentGifts (GiftName, Description, GiftPrice, GiftCategory)
+VALUES
+    ('Customized Photo Frame', 'Wooden photo frame with custom engraving', 24.99, 'Home Decor'),
+    ('Gourmet Coffee Gift Set', 'Assorted gourmet coffee collection', 39.95, 'Food & Drink'),
+    ('Memory Foam Neck Pillow', 'Ergonomic memory foam neck pillow for travel', 19.99, 'Travel Accessories'),
+	('Smart Indoor Garden Kit', 'Hydroponic garden kit for indoor plant cultivation', 69.99, 'Gardening'),
+    ('Portable Bluetooth Speaker', 'Waterproof portable speaker with long battery life', 59.95, 'Electronics'),
+    ('Leather Travel Wallet', 'Handcrafted leather travel wallet with RFID protection', 34.50, 'Accessories'),
+    ('Cookbook Collection', 'Set of classic and contemporary cookbooks', 45.00, 'Books');
+
+
 CREATE TABLE dbo.UserFavoriteGift (
     UserFavoriteGiftId INT IDENTITY (1, 1) PRIMARY KEY,
-    UserId             INT,
+    PGiftId             INT,
     GiftId             INT,
-    FOREIGN KEY (UserId) REFERENCES dbo.UserInfo(UserId),
+    FOREIGN KEY (PGiftId) REFERENCES dbo.ParentGifts(PGiftId),
     FOREIGN KEY (GiftId) REFERENCES dbo.GiftInfo(GiftId)
 );
 

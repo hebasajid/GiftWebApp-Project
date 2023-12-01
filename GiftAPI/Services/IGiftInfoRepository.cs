@@ -19,11 +19,11 @@ namespace GiftAPI.Services
 
 
         // Methods for managing user's favorite gifts
-        Task<bool> AddToUserFavoriteAsync(int userId, int giftId);
+        Task<bool> AddToParentFavoriteAsync(int pGiftId, int giftId);
 
-        Task<bool> DeleteFromUserFavoriteAsync(int userId, int giftId);
+        Task<bool> DeleteFromParentFavoriteAsync(int pGiftId, int giftId);
 
-        Task<bool> UpdateUserFavoriteAsync(int userId, List<int> updatedGiftIds);
+        Task<bool> UpdateParentFavoriteAsync(int pGiftId, List<int> updatedGiftIds);
 
         // CRUD operations for GiftInfo table
         Task<GiftInfo> GetGiftByIdAsync(int giftId);
@@ -35,7 +35,7 @@ namespace GiftAPI.Services
         //Task<bool> DeleteGiftAsync(int giftId);
 
         // Method to get the list of gifts favorited by a user
-        Task<List<GiftInfo>> GetFavoritedGiftsByUserAsync(int userId);
+        Task<List<GiftInfo>> GetFavoritedGiftsByParentAsync(int pGiftId);
 
         Task<bool> SaveAsync();
 

@@ -19,11 +19,11 @@ public partial class GiftInfoDbContext : DbContext
 
     public virtual DbSet<UserFavoriteGift> UserFavoriteGifts { get; set; }
 
-    public virtual DbSet<UserInfo> UserInfos { get; set; }
+    public virtual DbSet<ParentGifts> ParentGiftss { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=GiftInfoDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=GiftInfoDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,20 +53,21 @@ public partial class GiftInfoDbContext : DbContext
                 .HasForeignKey(d => d.GiftId)
                 .HasConstraintName("FK__UserFavor__GiftI__29572725");
 
-            entity.HasOne(d => d.User).WithMany(p => p.UserFavoriteGifts)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__UserFavor__UserI__286302EC");
+            entity.HasOne(d => d.Parent).WithMany(p => p.UserFavoriteGifts)
+                .HasForeignKey(d => d.PGiftId)
+                .HasConstraintName("FK__UserFavor__PGift__286302EC");
         });
 
-        modelBuilder.Entity<UserInfo>(entity =>
+        modelBuilder.Entity<ParentGifts>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__UserInfo__1788CC4C50E4D1CA");
+            entity.HasKey(e => e.PGiftId).HasName("PK__ParentGifts__1788CC4C50E4D1CA");
 
-            entity.ToTable("UserInfo");
+            entity.ToTable("ParentGifts");
 
-            entity.Property(e => e.Email).HasMaxLength(100);
-            entity.Property(e => e.UserName).HasMaxLength(100);
-            entity.Property(e => e.UserPass).HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.GiftCategory).HasMaxLength(100);
+            entity.Property(e => e.GiftName).HasMaxLength(255);
+            entity.Property(e => e.GiftPrice).HasColumnType("decimal(10, 2)");
         });
 
         OnModelCreatingPartial(modelBuilder);

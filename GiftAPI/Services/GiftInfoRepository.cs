@@ -64,10 +64,10 @@ namespace GiftInfoAPI.Services
         }
 
 
-        public async Task<bool> AddToUserFavoriteAsync(int userId, int giftId)
+        public async Task<bool> AddToParentFavoriteAsync(int pGiftId, int giftId)
         {
             // checking if the user and gift exist in the database
-            var user = await _context.UserInfos.FindAsync(userId);
+            var user = await _context.ParentGiftss.FindAsync(pGiftId);
             var gift = await _context.GiftInfos.FindAsync(giftId);
 
             if (user != null && gift != null)
@@ -75,14 +75,14 @@ namespace GiftInfoAPI.Services
                
                 // Check if the user already has the gift in favorites
                 var isAlreadyFavorite = await _context.UserFavoriteGifts
-                    .AnyAsync(ufg => ufg.UserId == userId && ufg.GiftId == giftId);
+                    .AnyAsync(ufg => ufg.PGiftId == pGiftId && ufg.GiftId == giftId);
 
                 if (!isAlreadyFavorite)
                 {
                     // If the gift is not already a favorite add it to the users favorites
                     var userFavoriteGift = new UserFavoriteGift
                     {
-                        UserId = userId,
+                        PGiftId = pGiftId,
                         GiftId = giftId
                     };
 
@@ -102,17 +102,17 @@ namespace GiftInfoAPI.Services
         }
 
 
-        public async Task<bool> DeleteFromUserFavoriteAsync(int userId, int giftId)
+        public async Task<bool> DeleteFromParentFavoriteAsync(int pGiftId, int giftId)
         {
             // Check if the user and gift exist in the database
-            var user = await _context.UserInfos.FindAsync(userId);
+            var user = await _context.ParentGiftss.FindAsync(pGiftId);
             var gift = await _context.GiftInfos.FindAsync(giftId);
 
             if (user != null && gift != null)
             {
                 // Check if the gift is in the user's favorites
                 var userFavoriteGift = await _context.UserFavoriteGifts
-                    .FirstOrDefaultAsync(ufg => ufg.UserId == userId && ufg.GiftId == giftId);
+                    .FirstOrDefaultAsync(ufg => ufg.PGiftId == pGiftId && ufg.GiftId == giftId);
 
                 if (userFavoriteGift != null)
                 {
@@ -132,15 +132,15 @@ namespace GiftInfoAPI.Services
             return false; // Return false if user or gift is not found
         }
 
-        public async Task<bool> UpdateUserFavoriteAsync(int userId, List<int> updatedGiftIds)
+        public async Task<bool> UpdateParentFavoriteAsync(int pGiftId, List<int> updatedGiftIds)
         {
             // Check if the user exists in the database
-            var user = await _context.UserInfos.FindAsync(userId);
+            var user = await _context.ParentGiftss.FindAsync(pGiftId);
 
             if (user != null)
             {
                 // Clear existing favorite gifts for the user
-                var userFavorites = _context.UserFavoriteGifts.Where(ufg => ufg.UserId == userId);
+                var userFavorites = _context.UserFavoriteGifts.Where(ufg => ufg.PGiftId == pGiftId);
                 _context.UserFavoriteGifts.RemoveRange(userFavorites);
 
                 // Add updated gifts as user's favorites
@@ -153,7 +153,7 @@ namespace GiftInfoAPI.Services
                     {
                         var userFavoriteGift = new UserFavoriteGift
                         {
-                            UserId = userId,
+                            PGiftId = pGiftId,
                             GiftId = giftId
                         };
 
@@ -173,10 +173,10 @@ namespace GiftInfoAPI.Services
             return false; // Return false if user is not found
         }
 
-        public async Task<List<GiftInfo>> GetFavoritedGiftsByUserAsync(int userId)
+        public async Task<List<GiftInfo>> GetFavoritedGiftsByParentAsync(int pGiftId)
         {
             var favoritedGifts = await _context.UserFavoriteGifts
-                .Where(ufg => ufg.UserId == userId)
+                .Where(ufg => ufg.PGiftId == pGiftId)
                 .Select(ufg => ufg.GiftId)
                 .ToListAsync();
 
