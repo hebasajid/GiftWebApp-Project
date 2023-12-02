@@ -23,6 +23,7 @@ namespace GiftAPI
                options.UseSqlServer(builder.Configuration.GetConnectionString("Connection2GiftInfoDB")));
 
             builder.Services.AddScoped<IGiftInfoRepository, GiftInfoRepository>();
+            builder.Services.AddScoped<IParentsGiftsRepository, ParentsGiftsRepository>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

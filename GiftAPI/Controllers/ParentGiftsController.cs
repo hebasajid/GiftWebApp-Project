@@ -9,6 +9,7 @@ using GiftInfoLibraryy.Models;
 using AutoMapper;
 using GiftAPI.DTOs;
 using GiftAPI.Services;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace GiftAPI.Controllers
 {
@@ -26,96 +27,190 @@ namespace GiftAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllParentsGifts()
+        public async Task<ActionResult<IEnumerable<ParentGiftsDto>>> GetAllParentsGifts()
         {
-            try
-            {
-                var parentsGifts = await _parentsGiftsRepository.GetAllParentsGifts();
-                var parentsGiftsDto = _mapper.Map<IEnumerable<ParentGiftsDto>>(parentsGifts);
-                return Ok(parentsGiftsDto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var parentGifts = await _parentsGiftsRepository.GetAllParentsGiftsAsync();
+            var parentGiftsDto = _mapper.Map<IEnumerable<ParentGiftsDto>>(parentGifts);
+            return Ok(parentGiftsDto);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetParentsGiftById(int id)
-        {
-            try
-            {
-                var parentsGift = await _parentsGiftsRepository.GetParentsGiftById(id);
-                if (parentsGift == null)
-                    return NotFound();
+        
 
-                var parentsGiftDto = _mapper.Map<ParentGiftsDto>(parentsGift);
-                return Ok(parentsGiftDto);
-            }
-            catch (Exception ex)
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ParentGiftsDto>> GetParentsGiftById(int id)
+        {
+            var parentGift = await _parentsGiftsRepository.GetParentsGiftByIdAsync(id);
+
+            if (parentGift == null)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return NotFound();
             }
+
+            var parentGiftDto = _mapper.Map<ParentGiftsDto>(parentGift);
+            return Ok(parentGiftDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddParentsGift([FromBody] ParentGiftsDto parentsGiftDto)
+        public async Task<ActionResult<ParentGiftsDto>> AddParentsGift(ParentGiftsDto parentGiftCreateDto)
         {
-            try
-            {
-                if (parentsGiftDto == null)
-                    return BadRequest("ParentGift object is null");
+            var parentGift = _mapper.Map<ParentGift>(parentGiftCreateDto);
+            await _parentsGiftsRepository.AddParentsGiftAsync(parentGift);
 
-                var parentsGift = _mapper.Map<ParentGift>(parentsGiftDto);
-                await _parentsGiftsRepository.AddParentsGift(parentsGift);
-
-                var createdGiftDto = _mapper.Map<ParentGiftsDto>(parentsGift);
-                return CreatedAtAction(nameof(GetParentsGiftById), new { id = createdGiftDto.PGiftId }, createdGiftDto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            return CreatedAtAction(nameof(GetParentsGiftById), new { id = parentGift.PGiftId }, _mapper.Map<ParentGiftsDto>(parentGift));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateParentsGift(int id, [FromBody] ParentGiftsDto parentsGiftDto)
+        public async Task<IActionResult> UpdateParentsGift(int id, ParentGiftsDto parentGiftUpdateDto)
         {
-            try
-            {
-                var existingParentsGift = await _parentsGiftsRepository.GetParentsGiftById(id);
-                if (existingParentsGift == null)
-                    return NotFound();
+            var parentGift = await _parentsGiftsRepository.GetParentsGiftByIdAsync(id);
 
-                _mapper.Map(parentsGiftDto, existingParentsGift);
-                await _parentsGiftsRepository.UpdateParentsGift(existingParentsGift);
-
-                return NoContent();
-            }
-            catch (Exception ex)
+            if (parentGift == null)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return NotFound();
             }
+
+            _mapper.Map(parentGiftUpdateDto, parentGift);
+            await _parentsGiftsRepository.UpdateParentsGiftAsync(parentGift);
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteParentsGift(int id)
         {
-            try
-            {
-                var existingParentsGift = await _parentsGiftsRepository.GetParentsGiftById(id);
-                if (existingParentsGift == null)
-                    return NotFound();
+            var parentGift = await _parentsGiftsRepository.GetParentsGiftByIdAsync(id);
 
-                await _parentsGiftsRepository.DeleteParentsGift(id);
-
-                return NoContent();
-            }
-            catch (Exception ex)
+            if (parentGift == null)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return NotFound();
             }
+
+            await _parentsGiftsRepository.DeleteParentsGiftAsync(id);
+            return NoContent();
         }
+
+        // PATCH: api/parentgifts/{id}
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchParentGift(int id, [FromBody] JsonPatchDocument<ParentGiftsDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
+
+            var parentGift = await _parentsGiftsRepository.GetParentsGiftByIdAsync(id);
+            if (parentGift == null)
+            {
+                return NotFound();
+            }
+
+            var parentGiftToPatch = _mapper.Map<ParentGiftsDto>(parentGift);
+            patchDoc.ApplyTo(parentGiftToPatch, ModelState);
+
+            if (!TryValidateModel(parentGiftToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(parentGiftToPatch, parentGift);
+            await _parentsGiftsRepository.UpdateParentsGiftAsync(parentGift);
+
+            return NoContent();
+        }
+
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllParentsGifts()
+        //{
+        //    try
+        //    {
+        //        var parentsGifts = await _parentsGiftsRepository.GetAllParentsGifts();
+        //        var parentsGiftsDto = _mapper.Map<IEnumerable<ParentGiftsDto>>(parentsGifts);
+        //        return Ok(parentsGiftsDto);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
+
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetParentsGiftById(int id)
+        //{
+        //    try
+        //    {
+        //        var parentsGift = await _parentsGiftsRepository.GetParentsGiftById(id);
+        //        if (parentsGift == null)
+        //            return NotFound();
+
+        //        var parentsGiftDto = _mapper.Map<ParentGiftsDto>(parentsGift);
+        //        return Ok(parentsGiftDto);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> AddParentsGift([FromBody] ParentGiftsDto parentsGiftDto)
+        //{
+        //    try
+        //    {
+        //        if (parentsGiftDto == null)
+        //            return BadRequest("ParentGift object is null");
+
+        //        var parentsGift = _mapper.Map<ParentGift>(parentsGiftDto);
+        //        await _parentsGiftsRepository.AddParentsGift(parentsGift);
+
+        //        var createdGiftDto = _mapper.Map<ParentGiftsDto>(parentsGift);
+        //        return CreatedAtAction(nameof(GetParentsGiftById), new { id = createdGiftDto.PGiftId }, createdGiftDto);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
+
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateParentsGift(int id, [FromBody] ParentGiftsDto parentsGiftDto)
+        //{
+        //    try
+        //    {
+        //        var existingParentsGift = await _parentsGiftsRepository.GetParentsGiftById(id);
+        //        if (existingParentsGift == null)
+        //            return NotFound();
+
+        //        _mapper.Map(parentsGiftDto, existingParentsGift);
+        //        await _parentsGiftsRepository.UpdateParentsGift(existingParentsGift);
+
+        //        return NoContent();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
+
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteParentsGift(int id)
+        //{
+        //    try
+        //    {
+        //        var existingParentsGift = await _parentsGiftsRepository.GetParentsGiftById(id);
+        //        if (existingParentsGift == null)
+        //            return NotFound();
+
+        //        await _parentsGiftsRepository.DeleteParentsGift(id);
+
+        //        return NoContent();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
 
 
         //    private readonly GiftInfoDbContext _context;
