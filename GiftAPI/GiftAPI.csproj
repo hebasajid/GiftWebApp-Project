@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\GiftInfoLibrary</DockerfileContext>
+    <DockerfileContext>..\GiftInfoLibraryy</DockerfileContext>
     <UserSecretsId>09e590bb-dae9-4a17-aacc-c40106eb4cc8</UserSecretsId>
   </PropertyGroup>
 
